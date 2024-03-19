@@ -37,12 +37,7 @@ Additionally, some demo videos have been created here to provide others with a b
 
 #### login interface
 
-https://github.com/yanhuojunjun/Beehive/assets/149027679/5bddf250-f25a-4258-9915-b4422905ef0c
-
-
-https://github.com/yanhuojunjun/Beehive/assets/149027679/3d588420-579f-40f6-929b-c32ae2671866
-
-
+https://github.com/yanhuojunjun/Beehive/assets/149027679/0d2dda75-90bc-4141-84e6-3d97e57062f0
 
 #### admin interface
 
