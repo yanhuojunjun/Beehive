@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Update</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.css' %}">
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Manager Page</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/manager/image/">Image Management <span class="sr-only">(current)</span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- body -->
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                Image Update
+            </h3>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="col-sm-8">
+                        <input type="hidden" name="image_id" value="{{ image.id }}">
+                        <label for="title" class="control-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ image.title }}">
+                        <label for="user" class="control-label">User</label>
+                            <select class="form-control" id="user" name="user" >
+                            {% for user in users %}
+                            <option value="{{ image.user.id }}">{{ image.user.name }}</option>
+                            {% endfor %}
+                            </select>
+                        <label for="type" class="control-label">Type</label>
+                        <select class="form-control" id="type" name="type">
+                            <option value="addiction" {% if 'addiction' == image.type %}selected{% endif %}>addiction</option>
+                            <option value="unhoused" {% if 'unhoused' == image.type %}selected{% endif %}>unhoused</option>
+                            <option value="diseases" {% if 'diseases' == image.type %}selected{% endif %}>diseases</option>
+                            <option value="recovering alcoholic" {% if 'recovering alcoholic' == image.type %}selected{% endif %}>recovering alcoholic</option>
+                        </select>
+                        <label for="location" class="control-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" value="{{ image.location }}">
+                        <label for="time" class="control-label">Time</label>
+                        <input type="text" class="form-control" id="time" name="time"  readonly>
+                            <script>
+                                var currentDate = new Date();
+                                var formattedDate = currentDate.getFullYear() + '-' +
+                                ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' +
+                                ('0' + currentDate.getDate()).slice(-2) + ' ' +
+                                ('0' + currentDate.getHours()).slice(-2) + ':' +
+                                ('0' + currentDate.getMinutes()).slice(-2) + ':' +
+                                ('0' + currentDate.getSeconds()).slice(-2);
+                                document.getElementById("time").value = formattedDate;
+                            </script>
+                        <label for="bio" class="control-label">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio" placeholder="please enter a bio">{{ image.bio }}</textarea>
+                        <label for="picture" class="control-label">Picture</label>
+                        <input type="file" class="form-control" id="picture" name="picture">
+                        {% if image.picture %}
+                        <img src="{{ image.picture.url }}" alt="photo" style="max-width: 100px; max-height: 100px;">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success">Save and Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script rel="script" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script rel="script" src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.js' %}"></script>
+
+</body>
+</html>
+
+

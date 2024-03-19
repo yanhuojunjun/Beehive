@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ image.title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.css' %}">
+    <style>
+        .rating-star {
+            color: darkgrey;
+            cursor: pointer;
+        }
+        .rating-star.selected {
+             color: gold;
+        }
+        .movie-image {
+            max-width: 300px;
+            height: auto;
+            display: block;
+        }
+        .movie-details {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .movie-info {
+            margin-left: 40px;
+        }
+        .watch-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: green;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .review {
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        h1, p {
+            font-size: 18px; /* You can adjust the size as needed */
+        }
+    </style>
+</head>
+<body>
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('#favorite-button').click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/add_to_favorites/',  // Update with the correct URL
+                type: 'POST',
+                data: {
+                    'user': '{{ user.id }}',  // Assuming you have movie ID in your context
+                    'movie': '{{ movie.id }}',  // Assuming you have movie ID in your context
+                    'rating': '{{ rating }}',
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'  // CSRF token for security
+                },
+                success: function(response) {
+                    if(response.success) {
+                        alert("Added to favorites!");
+                    }
+                }
+            });
+        });
+    });
+</script>
+<script>
+$(document).ready(function() {
+    var rating = 0;
+    $('.rating-star').click(function() {
+        rating = $(this).data('value');
+        updateStars(rating);
+    });
+    function updateStars(rating) {
+        $('.rating-star').each(function() {
+            var starValue = $(this).data('value');
+            $(this).removeClass('selected');
+            if (starValue <= rating) {
+                $(this).addClass('selected');
+            }
+        });
+    }
+    $('#comment-button').click(function(e) {
+        e.preventDefault();
+        var comment = $('#commentText').val();
+        if (comment && rating > 0) {
+            $.ajax({
+                url: '/add_comment/',
+                type: 'POST',
+                data: {
+                    'user_id': '{{ user.id }}',
+                    'movie_id': '{{ movie.id }}',
+                    'comment': comment,
+                    'rating': rating,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        alert("评论添加成功!");
+                        $('#commentText').val('');
+                        updateStars(0);
+
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        } else {
+            alert("Please enter your comment and select a rating！");
+        }
+    });
+});
+</script>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Image</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/user/login/">log out</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+    <div class="container">
+        <!-- image -->
+        <div class="movie-details">
+            <div>
+                {% if image.picture %}
+                    <img src="{{ image.picture.url }}" alt="{{ image.title }}" class="movie-image img-responsive" id="zoomedImage">
+                    <script>
+                        document.getElementById("zoomedImage").addEventListener("click", function() {
+                            var zoomedImageDiv = document.createElement("div");
+                            zoomedImageDiv.style.position = "fixed";
+                            zoomedImageDiv.style.top = "0";
+                            zoomedImageDiv.style.left = "0";
+                            zoomedImageDiv.style.width = "100%";
+                            zoomedImageDiv.style.height = "100%";
+                            zoomedImageDiv.style.background = "rgba(0, 0, 0, 0.7)";
+                            zoomedImageDiv.style.zIndex = "1000";
+                            zoomedImageDiv.style.display = "flex";
+                            zoomedImageDiv.style.justifyContent = "center";
+                            zoomedImageDiv.style.alignItems = "center";
+
+                            var zoomedImage = document.createElement("img");
+                            zoomedImage.src = "{{ image.picture.url }}";
+                            zoomedImage.style.maxWidth = "90%";
+                            zoomedImage.style.maxHeight = "90%";
+                            zoomedImage.style.objectFit = "contain";
+
+                            zoomedImageDiv.appendChild(zoomedImage);
+
+                            zoomedImageDiv.addEventListener("click", function() {
+                                zoomedImageDiv.remove();
+                            });
+
+                            document.body.appendChild(zoomedImageDiv);
+                        });
+                    </script>
+                {% endif %}
+            </div>
+            <div class="movie-info">
+                <h3><strong>{{ image.title }}</strong></h3>
+                <p><strong>Artist</strong>: <a href="#" id="directorName" data-toggle="modal" data-target="#directorModal">{{ image.user.name }}</a></p>
+                <p><strong>Type</strong>: {{ image.type }}</p>
+                <p><strong>Upload time</strong>: {{ image.time }}</p>
+                <p><strong>Area:</strong>: {{ image.location }}</p>
+                <a href="{{ movie.web }}" target="_blank" class="watch-button">Contact</a>
+                <a id="favorite-button" style="background-color: red;" class="watch-button">Favorite</a>
+            </div>
+        </div>
+        <p><strong>Introduction</strong>: {{ image.bio }}</p>
+        <!-- conmment -->
+        <textarea class="form-control" id="commentText" rows="3" placeholder="please entry your comment..."></textarea>
+        <div id="rating">
+        <i class="fa fa-star rating-star" data-value="1"></i>
+        <i class="fa fa-star rating-star" data-value="2"></i>
+        <i class="fa fa-star rating-star" data-value="3"></i>
+        <i class="fa fa-star rating-star" data-value="4"></i>
+        <i class="fa fa-star rating-star" data-value="5"></i>
+        </div>
+        <!-- comment button -->
+        <button id="comment-button" style="background-color: blue; color: white; margin-top: 10px;" class="btn btn-primary">comment</button>
+        <!-- users' comment -->
+        <div class="movie-reviews">
+            <h2>Comments</h2>
+            {% for review in reviews %}
+            <div class="review">
+                <p><strong>{{ review.user.username }}</strong> Rating:
+                {% with '12345' as stars %}
+                {% for i in stars %}
+                    {% if forloop.counter <= review.rating %}
+                        <i class="fa fa-star" style="color: gold;"></i>
+                        {% else %}
+                            <i class="fa fa-star" style="color: darkgrey;"></i>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+                </p>
+                <p>{{ review.comment }}</p>
+            </div>
+            {% empty %}
+            <p>No comment yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.js' %}"></script>
+</body>
+</html>

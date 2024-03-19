@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Management</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.css' %} ">
+    <style>
+        body{
+            background-image: url("{% static 'img/landscape1.webp' %}");
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Manager Page</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/manager/image/">Image <span class="sr-only">(current)</span></a></li>
+                <li><a href="/manager/user/">User</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/user/login/">log out</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div style="float: right; width: 300px">
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="search"></label>
+                <input type="text" id="search" name="search" class="form-control" value="{{ search_query }}" placeholder="please enter the search query">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </span>
+            </div>
+        </form>
+    </div>
+    <div style="margin-bottom: 10px">
+        <a class="btn btn-success" href="/manager/image_add/">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+            Add Image
+        </a>
+    </div>
+    <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+                Image Gallery
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Time</th>
+                    <th>Bio</th>
+                    <th>Picture</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for image in image_list %}
+                    <tr>
+                        <td>{{ image.title }}</td>
+                        <td>{{ image.user.name }}</td>
+                        <td>{{ image.type }}</td>
+                        <td>{{ image.location }}</td>
+                        <td>{{ image.time }}</td>
+                        <td>{{ image.bio|truncatechars:20 }}</td>
+                        <td>
+                            {% if image.picture %}
+                                <img src="{{ image.picture.url }}" alt="Photo of {{ image.title }}" width="40">
+                            {% else %}
+                                No photo
+                        {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-xs" href="/manager/image_update/?update_id={{ image.id }}">Edit</a>
+                            <a class="btn btn-danger btn-xs" href="/manager/image_delete/?del_id={{ image.id }}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+</div>
+    <script rel="script" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script rel="script" src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.js' %}"></script>
+</body>
+</html>

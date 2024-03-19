@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>share image</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.css' %}">
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Share your artwork to the world !</a>
+        </div>
+    </div>
+</nav>
+<!-- main body -->
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                add image
+            </h3>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="col-sm-8">
+                        <label for="title" class="control-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="please enter a title">
+                        <input type="hidden" name="user" value="{{ user }}">
+                        <label for="type" class="control-label">Type</label>
+                        <select class="form-control" id="type" name="type">
+                            <option value="addiction">addiction</option>
+                            <option value="unhoused">unhoused</option>
+                            <option value="diseases">diseases</option>
+                            <option value="recovering alcoholic">recovering alcoholic</option>
+                        </select>
+                        <label for="location" class="control-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" placeholder="please enter a location">
+                        <label for="time" class="control-label">Time</label>
+                        <input type="text" class="form-control" id="time" name="time" placeholder="please enter a time" readonly>
+                            <script>
+                                var currentDate = new Date();
+                                var formattedDate = currentDate.getFullYear() + '-' +
+                                ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' +
+                                ('0' + currentDate.getDate()).slice(-2) + ' ' +
+                                ('0' + currentDate.getHours()).slice(-2) + ':' +
+                                ('0' + currentDate.getMinutes()).slice(-2) + ':' +
+                                ('0' + currentDate.getSeconds()).slice(-2);
+                                document.getElementById("time").value = formattedDate;
+                            </script>
+                        <label for="bio" class="control-label">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio" placeholder="please enter a bio"></textarea>
+                        <label for="picture" class="control-label">Picture</label>
+                        <input type="file" class="form-control" id="picture" name="picture">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success">add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script rel="script" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script rel="script" src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.js' %}"></script>
+</body>
+</html>
