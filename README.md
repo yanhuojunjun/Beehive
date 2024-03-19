@@ -40,6 +40,10 @@ Additionally, some demo videos have been created here to provide others with a b
 https://github.com/yanhuojunjun/Beehive/assets/149027679/5bddf250-f25a-4258-9915-b4422905ef0c
 
 
+https://github.com/yanhuojunjun/Beehive/assets/149027679/3d588420-579f-40f6-929b-c32ae2671866
+
+
+
 #### admin interface
 
 
