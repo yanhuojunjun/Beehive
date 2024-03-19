@@ -37,6 +37,7 @@ Additionally, some demo videos have been created here to provide others with a b
 
 #### login interface
 I have implemented a basic registration and login functionality. User registration information is stored in the "user" table in the database. 
+
 Users or admins can log in to the system using their username and password. Upon logging in, admins will be directed to the admin interface, while regular users will be directed to the user interface.
 
 
@@ -58,6 +59,7 @@ https://github.com/yanhuojunjun/Beehive/assets/149027679/6f81853e-f00c-4d18-9341
 
 #### user interface
 In the user interface, users can view all images on Beehive and query images based on specific features (such as "unhousing", "recovering alcoholic", "addiction" ect). 
+
 Clicking on an image allows users to view detailed information about the image, including artist, time, location, description, type, etc. Additionally, I plan to add multiple features in the future, such as favorites, comments, and more.
 
 
