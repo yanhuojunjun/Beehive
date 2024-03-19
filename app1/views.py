@@ -157,7 +157,6 @@ def manager_user_delete(request):
     return redirect("/manager/user/")
 
 
-# 更新用户
 def manager_user_update(request):
     if request.method == "GET":
         update_id = request.GET.get("update_id")
